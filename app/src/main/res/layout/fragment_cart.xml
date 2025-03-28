@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cartContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/tvCartTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Моя корзина"
+        android:textSize="20sp"
+        android:fontFamily="@font/mulsih_bold"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCartItems"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:clipToPadding="false"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/tvTotalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:text="Сумма: 0.0"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnCheckout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Оформить заказ"
+        android:textSize="18dp"
+        android:paddingVertical="16dp"
+        android:fontFamily="@font/mulsih_bold"
+        android:backgroundTint="@color/green"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

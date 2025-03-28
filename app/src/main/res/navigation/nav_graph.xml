@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/onboardingFragment">
+
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.example.freshmarket.ui.fragment.OnboardingFragment"
+        android:label="Onboarding"
+        tools:layout="@layout/fragment_onboarding">
+        <action
+            android:id="@+id/action_onboardingFragment_to_loginFragment"
+            app:destination="@id/loginFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.freshmarket.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.freshmarket.ui.fragment.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register"/>
+
+    <!-- Главный экран (продукты) -->
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.freshmarket.ui.fragment.ProductListFragment"
+        android:label="Главная"
+        tools:layout="@layout/fragment_product_list">
+        <action
+            android:id="@+id/action_nav_home_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+
+    <!-- Корзина -->
+    <fragment
+        android:id="@+id/nav_cart"
+        android:name="com.example.freshmarket.ui.fragment.CartFragment"
+        android:label="Корзина"
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_nav_cart_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+    </fragment>
+
+    <!-- Профиль -->
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.freshmarket.ui.fragment.ProfileFragment"
+        android:label="Профиль"
+        tools:layout="@layout/fragment_profile"/>
+
+    <!-- Детали товара -->
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.freshmarket.ui.fragment.ProductDetailsFragment"
+        android:label="Детали"
+        tools:layout="@layout/fragment_product_details">
+        <argument
+            android:name="productId"
+            app:argType="string"/>
+        <argument
+            android:name="productName"
+            app:argType="string"/>
+        <argument
+            android:name="productDescription"
+            app:argType="string"/>
+        <argument
+            android:name="productPrice"
+            app:argType="integer"/>
+        <argument
+            android:name="productImageUrl"
+            app:argType="string"/>
+    </fragment>
+
+    <!-- Экран оформления заказа -->
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.example.freshmarket.ui.fragment.CheckoutFragment"
+        android:label="Оформление заказа"
+        tools:layout="@layout/fragment_checkout"/>
+    <activity
+        android:id="@+id/authActivity"
+        android:name="com.example.freshmarket.ui.auth.AuthActivity"
+        android:label="AuthActivity" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.freshmarket.ui.main.MainActivity"
+        android:label="MainActivity" />
+</navigation>

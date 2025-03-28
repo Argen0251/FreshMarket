@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Слой тени -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <!-- Тень может быть реализована с полупрозрачным цветом -->
+            <solid android:color="#33000000" />
+        </shape>
+    </item>
+    <!-- Слой белого фона с небольшим смещением, чтобы тень проявилась снизу и по бокам -->
+    <item android:left="2dp" android:right="1dp" android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</layer-list>

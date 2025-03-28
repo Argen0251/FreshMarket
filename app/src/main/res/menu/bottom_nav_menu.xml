@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:title="Главная"
+        android:icon="@drawable/ic_home" />
+    <item
+        android:id="@+id/nav_cart"
+        android:title="Корзина"
+        android:icon="@drawable/ic_basketm" />
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Профиль"
+        android:icon="@drawable/ic_profile" />
+</menu>
