@@ -1,7 +1,6 @@
 package com.example.freshmarket.data.model
 
-data class User(
-    val uid: String = "",
+data class Category(
     val name: String = "",
-    val email: String = ""
+    val imageUrl: String = ""
 )

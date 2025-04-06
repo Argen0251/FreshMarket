@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.example.freshmarket.ui.fragment.OnboardingFragment"
+        android:name="com.example.freshmarket.view.fragment.OnboardingFragment"
         android:label="Onboarding"
         tools:layout="@layout/fragment_onboarding">
         <action
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.freshmarket.ui.auth.LoginFragment"
+        android:name="com.example.freshmarket.view.auth.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
@@ -28,14 +28,14 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.freshmarket.ui.fragment.RegisterFragment"
+        android:name="com.example.freshmarket.view.auth.RegisterFragment"
         android:label="Register"
         tools:layout="@layout/fragment_register"/>
 
     <!-- Главный экран (продукты) -->
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.freshmarket.ui.fragment.ProductListFragment"
+        android:name="com.example.freshmarket.view.fragment.ProductListFragment"
         android:label="Главная"
         tools:layout="@layout/fragment_product_list">
         <action
@@ -46,7 +46,7 @@
     <!-- Корзина -->
     <fragment
         android:id="@+id/nav_cart"
-        android:name="com.example.freshmarket.ui.fragment.CartFragment"
+        android:name="com.example.freshmarket.view.fragment.CartFragment"
         android:label="Корзина"
         tools:layout="@layout/fragment_cart">
         <action
@@ -57,14 +57,16 @@
     <!-- Профиль -->
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.freshmarket.ui.fragment.ProfileFragment"
+        android:name="com.example.freshmarket.view.fragment.ProfileFragment"
         android:label="Профиль"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile">
+
+    </fragment>
 
     <!-- Детали товара -->
     <fragment
         android:id="@+id/productDetailsFragment"
-        android:name="com.example.freshmarket.ui.fragment.ProductDetailsFragment"
+        android:name="com.example.freshmarket.view.fragment.ProductDetailsFragment"
         android:label="Детали"
         tools:layout="@layout/fragment_product_details">
         <argument
@@ -87,15 +89,68 @@
     <!-- Экран оформления заказа -->
     <fragment
         android:id="@+id/checkoutFragment"
-        android:name="com.example.freshmarket.ui.fragment.CheckoutFragment"
+        android:name="com.example.freshmarket.view.fragment.CheckoutFragment"
         android:label="Оформление заказа"
         tools:layout="@layout/fragment_checkout"/>
     <activity
         android:id="@+id/authActivity"
-        android:name="com.example.freshmarket.ui.auth.AuthActivity"
+        android:name="com.example.freshmarket.view.auth.AuthActivity"
         android:label="AuthActivity" />
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.example.freshmarket.ui.main.MainActivity"
+        android:name="com.example.freshmarket.view.main.MainActivity"
         android:label="MainActivity" />
+    <fragment
+        android:id="@+id/nav_favorite"
+        android:name="com.example.freshmarket.view.fragment.FavoriteFragment"
+        android:label="Избранное"
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_nav_favorite_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderStatusFragment"
+        android:name="com.example.freshmarket.view.fragment.OrderStatusFragment"
+        android:label="Статус заказа"
+        tools:layout="@layout/fragment_order_status" >
+        <deepLink
+            android:id="@+id/deeplink_orderstatus"
+            app:uri="app://orderstatus?orderId={orderId}" />
+        <action
+            android:id="@+id/action_cart_to_orderStatusFragment"
+            app:destination="@id/orderStatusFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/orderStatusFragment"
+            app:popUpToSaveState="true"
+            app:restoreState="true" />
+        <action
+            android:id="@+id/action_global_orderStatusFragment"
+            app:destination="@id/orderStatusFragment"
+            app:launchSingleTop="true"/>
+        <argument
+            android:name="orderId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderHistoryFragment"
+        android:name="com.example.freshmarket.view.fragment.OrderHistoryFragment"
+        android:label="История заказов"
+        tools:layout="@layout/fragment_order_history" />
+    <fragment
+        android:id="@+id/paymentChoiceFragment"
+        android:name="com.example.freshmarket.view.fragment.PaymentChoiceFragment"
+        android:label="Выбор оплаты"
+        tools:layout="@layout/fragment_payment_choice">
+        <action
+            android:id="@+id/action_paymentChoiceFragment_to_paymentCardFragment"
+            app:destination="@id/paymentCardFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/paymentCardFragment"
+        android:name="com.example.freshmarket.view.fragment.PaymentCardFragment"
+        android:label="Оплата картой"
+        tools:layout="@layout/fragment_payment_card"/>
+
 </navigation>

@@ -61,6 +61,11 @@
             android:layout_marginHorizontal="20dp"
             android:fontFamily="@font/mulish_semibold"
             android:layout_marginTop="8dp"/>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDetailAddToCart"
@@ -77,5 +82,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Добавить в корзину"/>
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_star"
+        android:id="@+id/btnFavorite"
+        android:scaleType="fitXY"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        />
+</LinearLayout>
+
     </LinearLayout>
 </ScrollView>
