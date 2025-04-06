@@ -61,10 +61,10 @@ class ProductListFragment : Fragment() {
                 findNavController().navigate(action)
             },
             onAddToCartClick = { product ->
-                // Добавление в корзину
-                cartViewModel.addToCart(product)
+                cartViewModel.addOrIncrease(product, 1.0)
                 Toast.makeText(requireContext(), "Товар добавлен в корзину!", Toast.LENGTH_SHORT).show()
             }
+
         )
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvProducts.adapter = productAdapter

@@ -20,7 +20,6 @@ class CartFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val cartViewModel: CartViewModel by activityViewModels()
-
     private var cartAdapter: CartAdapter? = null
 
     override fun onCreateView(
@@ -38,6 +37,7 @@ class CartFragment : Fragment() {
         setupRecyclerView()
         observeViewModel()
 
+        // Кнопка "Оформить заказ"
         binding.btnCheckout.setOnClickListener {
             findNavController().navigate(R.id.action_nav_cart_to_checkoutFragment)
         }
@@ -50,24 +50,22 @@ class CartFragment : Fragment() {
 
         cartAdapter = CartAdapter(
             items = emptyList(),
-            onRemoveClick = { product ->
-                cartViewModel.removeFromCart(product)
+            onQuantityChange = { productId, newQuantity ->
+                cartViewModel.updateItemQuantity(productId, newQuantity)
+            },
+            onRemove = { productId ->
+                cartViewModel.removeItem(productId)
             }
         )
         binding.rvCartItems.adapter = cartAdapter
     }
 
     private fun observeViewModel() {
-        cartViewModel.cartItems.observe(viewLifecycleOwner) { items ->
-            cartAdapter?.updateItems(items)
+        cartViewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            cartAdapter?.updateItems(cartItems)
         }
         cartViewModel.totalPrice.observe(viewLifecycleOwner) { totalCents ->
-            val totalStr = if (totalCents % 1 == 0) {
-                "${totalCents} сом"
-            } else {
-                String.format("%.1f сом", totalCents)
-            }
-            binding.tvTotalPrice.text = "Сумма: $totalStr"
+            binding.tvTotalPrice.text = "Сумма: $totalCents сом"
         }
     }
 
