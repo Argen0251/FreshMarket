@@ -43,6 +43,41 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/tvQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tvCartProductName"
+            app:layout_constraintTop_toBottomOf="@id/tvCartProductPrice"
+            android:layout_marginTop="6dp"/>
+
+        <!-- Кнопка Увеличить -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnIncrease"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:text="+"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/green"
+            app:layout_constraintStart_toEndOf="@id/tvQuantity"
+            app:layout_constraintTop_toTopOf="@id/tvQuantity"
+            android:layout_marginStart="8dp" />
+
+        <!-- Кнопка Уменьшить -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDecrease"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:text="-"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="@id/btnIncrease"
+            app:layout_constraintTop_toTopOf="@id/btnIncrease"
+            android:layout_marginStart="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRemove"
@@ -52,7 +87,7 @@
             app:icon="@drawable/ic_delet"
             app:iconTint="@color/white_green"
             android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnDecrease"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp"/>
 

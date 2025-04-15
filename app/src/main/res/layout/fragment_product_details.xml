@@ -61,6 +61,41 @@
             android:layout_marginHorizontal="20dp"
             android:fontFamily="@font/mulish_semibold"
             android:layout_marginTop="8dp"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btnMinus"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="-"
+                />
+
+            <EditText
+                android:id="@+id/etQuantity"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:gravity="center"
+                android:text="1.0"
+                />
+
+            <Button
+                android:id="@+id/btnPlus"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="+"
+                />
+
+        </LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDetailAddToCart"
@@ -77,5 +112,68 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Добавить в корзину"/>
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_star"
+        android:id="@+id/btnFavorite"
+        android:scaleType="fitXY"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        />
+</LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+        <!-- Уже есть: ivDetailImage, tvDetailName, tvDetailPrice, ... -->
+
+        <Button
+            android:id="@+id/btnShowReviewDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Оставить отзыв"/>
+
+            <LinearLayout
+                android:id="@+id/layoutRatingContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                >
+
+                <!-- Текст со средней оценкой -->
+                <TextView
+                    android:id="@+id/tvAvgRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Средняя оценка: 0.0"
+                    android:layout_marginEnd="12dp" />
+
+                <!-- Сам RatingBar для визуального отображения -->
+                <RatingBar
+                    android:id="@+id/ratingBarAvg"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="0.1"
+                    android:isIndicator="true"
+                    android:minHeight="20dp"
+                    android:maxHeight="20dp"
+                    android:layout_marginTop="8dp"
+                    android:progressTint="@color/yellow"
+                    android:progressBackgroundTint="@android:color/darker_gray"
+                    android:secondaryProgressTint="@color/yellow"/>
+
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvReviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>
