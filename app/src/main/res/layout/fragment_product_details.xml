@@ -121,6 +121,59 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         />
 </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+        <!-- Уже есть: ivDetailImage, tvDetailName, tvDetailPrice, ... -->
 
+        <Button
+            android:id="@+id/btnShowReviewDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Оставить отзыв"/>
+
+            <LinearLayout
+                android:id="@+id/layoutRatingContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                >
+
+                <!-- Текст со средней оценкой -->
+                <TextView
+                    android:id="@+id/tvAvgRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Средняя оценка: 0.0"
+                    android:layout_marginEnd="12dp" />
+
+                <!-- Сам RatingBar для визуального отображения -->
+                <RatingBar
+                    android:id="@+id/ratingBarAvg"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="0.1"
+                    android:isIndicator="true"
+                    android:minHeight="20dp"
+                    android:maxHeight="20dp"
+                    android:layout_marginTop="8dp"
+                    android:progressTint="@color/yellow"
+                    android:progressBackgroundTint="@android:color/darker_gray"
+                    android:secondaryProgressTint="@color/yellow"/>
+
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvReviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>

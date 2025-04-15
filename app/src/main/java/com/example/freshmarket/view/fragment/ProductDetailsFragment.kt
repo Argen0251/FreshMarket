@@ -1,19 +1,29 @@
 package com.example.freshmarket.view.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.RatingBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.freshmarket.R
 import com.example.freshmarket.data.model.Product
+import com.example.freshmarket.data.model.Review
 import com.example.freshmarket.databinding.FragmentProductDetailsBinding
+import com.example.freshmarket.view.main.ReviewAdapter
 import com.example.freshmarket.viewmodel.CartViewModel
 import com.example.freshmarket.viewmodel.FavoriteViewModel
+import com.example.freshmarket.viewmodel.ReviewViewModel
+import com.google.firebase.auth.FirebaseAuth
+import java.util.Date
 
 class ProductDetailsFragment : Fragment() {
 
@@ -22,8 +32,11 @@ class ProductDetailsFragment : Fragment() {
     private var _binding: FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val cartViewModel: CartViewModel by activityViewModels()
-    private val favoriteViewModel: FavoriteViewModel by activityViewModels()
+    private val cartViewModel: CartViewModel by viewModels({ requireActivity() })
+    private val favoriteViewModel: FavoriteViewModel by viewModels({ requireActivity() })
+    private val reviewViewModel: ReviewViewModel by viewModels()
+
+    private lateinit var reviewAdapter: ReviewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +50,7 @@ class ProductDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 1) Заполняем информацию о товаре
         binding.tvDetailName.text = args.productName
         binding.tvDetailPrice.text = "Цена: ${args.productPrice}"
         binding.tvDetailDescription.text = args.productDescription
@@ -47,27 +61,22 @@ class ProductDetailsFragment : Fragment() {
             .error(R.drawable.ic_fr_mar)
             .into(binding.ivDetailImage)
 
-        // Логика выбора количества
+        // 2) Кнопки +/– (шаг 0.2 кг)
         val etQty = binding.etQuantity
-        val btnMinus = binding.btnMinus
-        val btnPlus = binding.btnPlus
-
-        // При нажатии "+": увеличиваем на 0.2
-        btnPlus.setOnClickListener {
+        binding.btnPlus.setOnClickListener {
             val current = etQty.text.toString().toDoubleOrNull() ?: 1.0
             val newVal = current + 0.2
             etQty.setText(String.format("%.1f", newVal))
         }
-
-        // При нажатии "–": уменьшаем на 0.2, но не даём уйти в минус
-        btnMinus.setOnClickListener {
+        binding.btnMinus.setOnClickListener {
             val current = etQty.text.toString().toDoubleOrNull() ?: 1.0
             val newVal = (current - 0.2).coerceAtLeast(0.0)
             etQty.setText(String.format("%.1f", newVal))
         }
 
-        // При нажатии на "Добавить в корзину"
+        // 3) Добавление в корзину
         binding.btnDetailAddToCart.setOnClickListener {
+            val qty = etQty.text.toString().toDoubleOrNull() ?: 1.0
             val product = Product(
                 id = args.productId,
                 name = args.productName,
@@ -75,16 +84,11 @@ class ProductDetailsFragment : Fragment() {
                 priceCents = args.productPrice,
                 imageUrl = args.productImageUrl
             )
-
-            // Считываем число из etQuantity
-            val qty = etQty.text.toString().toDoubleOrNull() ?: 1.0
-            // Добавляем в корзину
             cartViewModel.addOrIncrease(product, qty)
-
-            Toast.makeText(requireContext(), "Добавлено $qty кг/шт в корзину!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Добавлено $qty кг в корзину!", Toast.LENGTH_SHORT).show()
         }
 
-        // Остальная логика (избранное и т.д.)
+        // 4) Добавление в избранное
         binding.btnFavorite.setOnClickListener {
             val product = Product(
                 id = args.productId,
@@ -100,8 +104,87 @@ class ProductDetailsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // 5) Подготовка списка отзывов
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        reviewAdapter = ReviewAdapter(
+            items = emptyList(),
+            currentUserId = currentUserId,
+            onDeleteClick = { review ->
+                // Удаляем отзыв → Firestore
+                reviewViewModel.deleteReview(getFirestoreProductId(), review.reviewId)
+            }
+        )
+        binding.rvReviews.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvReviews.adapter = reviewAdapter
+
+        // Подписываемся на LiveData отзывов
+        reviewViewModel.reviews.observe(viewLifecycleOwner) { reviews ->
+            reviewAdapter.updateData(reviews)
+            val avg = reviewViewModel.getAverageRating()
+            binding.tvAvgRating.text = String.format("Средняя оценка: %.1f", avg)
+            binding.ratingBarAvg.rating = avg.toFloat()
+        }
+
+        // 6) Загружаем отзывы из Firestore для нужного документа
+        reviewViewModel.loadReviews(getFirestoreProductId())
+
+        Log.d("ProductDetailsFragment", "Loading reviews for productId: ${args.productId} (Firestore doc = ${getFirestoreProductId()})")
+
+        // 7) Кнопка "Оставить отзыв"
+        binding.btnShowReviewDialog.setOnClickListener {
+            showReviewDialog()
+        }
     }
 
+    /**
+     * Если Firestore использует схему product_1, product_2 и т.д.,
+     * а в аргументах у вас просто "1", "2", — приводим:
+     */
+    private fun getFirestoreProductId(): String {
+        // Если документ в Firestore называется "product_1"
+        // при args.productId="1" вернём "product_1"
+        return "product_${args.productId}"
+    }
+
+    private fun showReviewDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_review, null)
+        val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
+        val etReviewText = dialogView.findViewById<EditText>(R.id.etReviewText)
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
+            Toast.makeText(requireContext(), "Только авторизованные пользователи могут оставлять отзывы", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val userId = currentUser.uid
+        val userEmail = currentUser.email ?: "NoEmail"
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Оставить отзыв")
+            .setView(dialogView)
+            .setPositiveButton("Отправить") { _, _ ->
+                val ratingVal = ratingBar.rating.toDouble()
+                val textVal = etReviewText.text.toString().trim()
+                if (ratingVal <= 0.0) {
+                    Toast.makeText(requireContext(), "Укажите оценку", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                val review = Review(
+                    userId = userId,
+                    userName = userEmail,
+                    rating = ratingVal,
+                    text = textVal,
+                    timestamp = Date(),
+                    reviewId = ""
+                )
+                // сохраняем отзыв в Firestore
+                reviewViewModel.addReview(getFirestoreProductId(), review)
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
